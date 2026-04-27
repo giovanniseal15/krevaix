@@ -1,31 +1,309 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KrevAIx</title>
+<title>KrevAIx — AI Automation for Operations-Driven Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-body {
-    background: #0a0a0f;
-    color: #f0f0f8;
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    text-align: center;
-}
-h1 { font-size: 3rem; margin-bottom: 1rem; }
-.ai { color: #00e5ff; }
-.x { color: #7b2fff; }
-p { color: #8a8a9a; font-size: 1.1rem; }
+:root{--ts:0.4s}
+[data-theme="dark"]{--bg1:#0a0a0f;--bg2:#111118;--bgc:#16161f;--bgch:#1c1c28;--cyan:#00e5ff;--purp:#7b2fff;--ag:rgba(0,229,255,0.08);--pg:rgba(123,47,255,0.08);--t1:#f0f0f8;--t2:#8a8a9a;--t3:#44445a;--brd:#1a1a2c;--brdl:#222233;--navbg:rgba(10,10,15,0.9);--tagbg:rgba(0,229,255,0.05)}
+[data-theme="light"]{--bg1:#f5f5fa;--bg2:#ededf7;--bgc:#ffffff;--bgch:#f0f0f8;--cyan:#0099bb;--purp:#5618cc;--ag:rgba(0,153,187,0.08);--pg:rgba(86,24,204,0.06);--t1:#0d0d18;--t2:#555566;--t3:#888899;--brd:#d8d8e8;--brdl:#c8c8d8;--navbg:rgba(245,245,250,0.92);--tagbg:rgba(0,153,187,0.06)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Mono',system-ui,sans-serif;background:var(--bg1);color:var(--t1);line-height:1.6;overflow-x:hidden;transition:background var(--ts) ease,color var(--ts) ease}
+.theme-toggle{width:44px;height:24px;border-radius:12px;background:var(--brd);border:1px solid var(--brdl);cursor:pointer;position:relative;transition:background var(--ts);display:flex;align-items:center;padding:0 3px;flex-shrink:0}
+.theme-toggle::after{content:'';width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purp));transition:transform .3s;position:absolute;left:3px}
+[data-theme="light"] .theme-toggle::after{transform:translateX(19px)}
+.toggle-icons{width:100%;display:flex;justify-content:space-between;padding:0 3px;font-size:9px;position:relative;z-index:1;pointer-events:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:var(--navbg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid transparent;transition:border-color .3s,background var(--ts)}
+nav.scrolled{border-bottom-color:var(--brd)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-icon{width:36px;height:36px;flex-shrink:0;position:relative}
+.nav-word{font-family:'Syne',Georgia,serif;font-weight:800;font-size:1.5rem;letter-spacing:-0.02em;display:flex;align-items:baseline}
+.nav-word .k{color:var(--t1)}.nav-word .ai{color:var(--cyan)}.nav-word .x{color:var(--purp)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-links{display:flex;gap:1.8rem;list-style:none;align-items:center}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;transition:color .3s}
+.nav-links a:hover{color:var(--t1)}
+.nav-cta{background:linear-gradient(135deg,var(--cyan),var(--purp))!important;color:#fff!important;padding:.5rem 1.2rem;border-radius:8px;font-weight:600!important;font-size:.85rem!important;transition:transform .2s,box-shadow .3s!important}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,229,255,.2)!important}
+.mob-btn{display:none;background:none;border:none;cursor:pointer;padding:.5rem}
+.mob-btn span{display:block;width:22px;height:2px;background:var(--t1);margin:5px 0;transition:all .3s;border-radius:2px}
+@keyframes spinCW{to{transform:rotate(360deg)}}
+@keyframes spinCCW{to{transform:rotate(-360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+.spin-cw{animation:spinCW 18s linear infinite}
+.spin-ccw{animation:spinCCW 12s linear infinite}
+.reveal{opacity:0;transform:translateY(28px);transition:all .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 65%);-webkit-mask-image:radial-gradient(ellipse at center,black 20%,transparent 65%)}
+.glow-c{position:absolute;top:-250px;left:30%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,229,255,.06) 0%,transparent 70%);pointer-events:none}
+.glow-p{position:absolute;bottom:-200px;right:20%;width:600px;height:600px;background:radial-gradient(circle,rgba(123,47,255,.05) 0%,transparent 70%);pointer-events:none}
+[data-theme="light"] .glow-c{opacity:.4}[data-theme="light"] .glow-p{opacity:.3}
+.hero-content{max-width:820px;text-align:center;position:relative;z-index:2}
+.hero-icon{width:80px;height:80px;margin:0 auto 2rem;position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;border:1px solid var(--brdl);border-radius:50px;font-size:.75rem;font-family:'DM Mono','Courier New',monospace;color:var(--t2);margin-bottom:2rem;background:var(--tagbg);animation:fadeDown .8s ease}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulseDot 2s infinite}
+.hero h1{font-family:'Syne',Georgia,serif;font-size:clamp(2.4rem,5.5vw,4rem);font-weight:700;line-height:1.1;letter-spacing:-1.5px;margin-bottom:1.5rem;animation:fadeUp .8s ease .1s both}
+.grad{background:linear-gradient(135deg,var(--cyan),var(--purp));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.1rem;color:var(--t2);max-width:580px;margin:0 auto 2.5rem;line-height:1.7;font-weight:300;animation:fadeUp .8s ease .2s both}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s ease .3s both}
+.btn-p{background:linear-gradient(135deg,var(--cyan),var(--purp));color:#fff;padding:.85rem 2rem;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;transition:all .3s;border:none;cursor:pointer;font-family:inherit}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,229,255,.2)}
+.btn-s{background:transparent;color:var(--t1);padding:.85rem 2rem;border-radius:8px;font-weight:500;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--brdl);transition:all .3s}
+.btn-s:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--brd);animation:fadeUp .8s ease .5s both}
+.stat-val{font-family:'DM Mono','Courier New',monospace;font-size:1.8rem;background:linear-gradient(135deg,var(--cyan),var(--purp));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:.72rem;color:var(--t3);margin-top:.3rem;text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono','Courier New',monospace}
+section{padding:6rem 2rem;transition:background var(--ts)}
+.sc{max-width:1100px;margin:0 auto}
+.s-label{font-family:'DM Mono','Courier New',monospace;font-size:.72rem;color:var(--cyan);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:1rem}
+.s-title{font-family:'Syne',Georgia,serif;font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-1px;margin-bottom:1rem;line-height:1.2}
+.s-sub{font-size:1rem;color:var(--t2);max-width:580px;line-height:1.7;font-weight:300}
+#services{background:var(--bg2);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.svc-card{background:var(--bgc);border:1px solid var(--brd);border-radius:14px;padding:2rem;transition:all .4s;position:relative;overflow:hidden}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purp));opacity:0;transition:opacity .4s}
+.svc-card:hover{background:var(--bgch);transform:translateY(-4px);border-color:var(--brdl)}
+.svc-card:hover::before{opacity:1}
+.svc-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--ag),var(--pg));border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;font-size:1.3rem}
+.svc-card h3{font-family:'Syne',Georgia,serif;font-size:1.1rem;font-weight:700;margin-bottom:.7rem}
+.svc-card p{font-size:.88rem;color:var(--t2);line-height:1.65;font-weight:300}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3rem}
+.proc-step{text-align:center;position:relative}
+.proc-step::after{content:'';position:absolute;top:30px;right:-1rem;width:100%;height:1px;background:linear-gradient(90deg,var(--brdl),transparent)}
+.proc-step:last-child::after{display:none}
+.step-num{width:60px;height:60px;border-radius:50%;border:1px solid var(--brdl);display:flex;align-items:center;justify-content:center;font-family:'DM Mono','Courier New',monospace;font-size:1rem;background:linear-gradient(135deg,var(--cyan),var(--purp));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;margin:0 auto 1.2rem;position:relative;z-index:2}
+.proc-step h3{font-family:'Syne',Georgia,serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem}
+.proc-step p{font-size:.83rem;color:var(--t2);line-height:1.55;font-weight:300}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.about-text p{color:var(--t2);margin-bottom:1.2rem;line-height:1.8;font-weight:300;font-size:.95rem}
+.highlights{display:grid;gap:1rem}
+.highlight{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:var(--bgc);border:1px solid var(--brd);border-radius:12px;transition:all .3s}
+.highlight:hover{border-color:var(--brdl);transform:translateX(4px)}
+.h-icon{width:42px;height:42px;min-width:42px;border-radius:10px;background:linear-gradient(135deg,var(--ag),var(--pg));border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.highlight h4{font-family:'Syne',Georgia,serif;font-size:.92rem;font-weight:700;margin-bottom:.2rem}
+.highlight p{font-size:.82rem;color:var(--t2);margin:0;line-height:1.5}
+#case-studies{background:var(--bg2);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)}
+.cs-ph{margin-top:3rem;padding:4rem 2rem;border:1px dashed var(--brdl);border-radius:14px;text-align:center;background:var(--tagbg)}
+.cs-ph h3{font-family:'Syne',Georgia,serif;font-size:1.2rem;margin-bottom:.8rem;font-weight:700}
+.cs-ph p{color:var(--t2);font-size:.92rem;max-width:480px;margin:0 auto 1.5rem;font-weight:300;line-height:1.6}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem}
+.contact-info>p{color:var(--t2);line-height:1.7;font-weight:300;font-size:.95rem}
+.c-detail{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bgc);border:1px solid var(--brd);border-radius:10px;transition:all .3s}
+.c-detail:hover{border-color:var(--brdl)}
+.c-icon{width:42px;height:42px;min-width:42px;border-radius:10px;background:linear-gradient(135deg,var(--ag),var(--pg));border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.c-text{font-size:.88rem;color:var(--t2)}
+.c-text strong{display:block;color:var(--t1);font-weight:600;margin-bottom:.1rem;font-family:'Syne',Georgia,serif}
+.contact-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.35rem}
+.form-group label{font-family:'DM Mono','Courier New',monospace;font-size:.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+.form-group input,.form-group textarea,.form-group select{background:var(--bgc);border:1px solid var(--brd);border-radius:8px;padding:.78rem 1rem;color:var(--t1);font-family:inherit;font-size:.9rem;transition:border-color .3s,background var(--ts);outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--cyan)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-group select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+.form-group select option{background:var(--bgc);color:var(--t1)}
+.form-submit{margin-top:.5rem}
+.form-submit .btn-p{width:100%;justify-content:center;padding:1rem}
+.form-success{display:none;text-align:center;padding:3rem 2rem;background:var(--bgc);border:1px solid var(--cyan);border-radius:14px}
+.form-success.show{display:block}
+.form-success h3{font-family:'Syne',Georgia,serif;font-size:1.3rem;margin-bottom:.5rem;color:var(--cyan)}
+.form-success p{color:var(--t2);font-weight:300}
+footer{padding:3rem 2rem;border-top:1px solid var(--brd)}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.foot-logo{display:flex;align-items:center;gap:10px}
+.foot-word{font-family:'Syne',Georgia,serif;font-size:1.15rem;font-weight:700;display:flex;align-items:baseline}
+.foot-word .k{color:var(--t1)}.foot-word .ai{color:var(--cyan)}.foot-word .x{color:var(--purp)}
+.foot-text{font-size:.75rem;color:var(--t3);font-family:'DM Mono','Courier New',monospace}
+@media(max-width:968px){.svc-grid{grid-template-columns:repeat(2,1fr)}.proc-grid{grid-template-columns:repeat(2,1fr)}.proc-step::after{display:none}.about-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem}}
+@media(max-width:768px){.nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--navbg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);flex-direction:column;padding:1.5rem 2rem;gap:1rem;border-bottom:1px solid var(--brd)}.nav-links.active{display:flex}.mob-btn{display:block}.mob-btn.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.mob-btn.active span:nth-child(2){opacity:0}.mob-btn.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}.svc-grid{grid-template-columns:1fr}.proc-grid{grid-template-columns:1fr}.hero-stats{gap:1.5rem;flex-wrap:wrap}.form-row{grid-template-columns:1fr}.footer-inner{flex-direction:column;gap:1rem}.hero{padding:7rem 1.5rem 3rem}section{padding:4rem 1.5rem}.nav-right{gap:1rem}}
 </style>
 </head>
 <body>
-<div>
-    <h1>krev<span class="ai">AI</span><span class="x">x</span></h1>
-    <p>AI Automation for Operations-Driven Businesses</p>
+<svg style="position:absolute;width:0;height:0"><defs>
+<linearGradient id="r1" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00e5ff" stop-opacity="0"/><stop offset="20%" stop-color="#00e5ff"/><stop offset="55%" stop-color="#7b2fff"/><stop offset="80%" stop-color="#7b2fff" stop-opacity=".3"/><stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/></linearGradient>
+<linearGradient id="r2" x1="72" y1="0" x2="0" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7b2fff" stop-opacity="0"/><stop offset="30%" stop-color="#7b2fff"/><stop offset="65%" stop-color="#00e5ff" stop-opacity=".5"/><stop offset="100%" stop-color="#7b2fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="cg" x1="16" y1="14" x2="56" y2="58" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#7b2fff"/></linearGradient>
+<filter id="rg"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs></svg>
+
+<nav id="navbar">
+<a href="#" class="nav-logo">
+<div class="nav-icon">
+<svg class="spin-cw" style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="36" height="36"><circle cx="36" cy="36" r="32" stroke="url(#r1)" stroke-width="2.5" fill="none" filter="url(#rg)"/><circle cx="36" cy="36" r="32" stroke="url(#r1)" stroke-width="1.5" fill="none" stroke-dasharray="5 10" opacity=".6"/></svg>
+<svg class="spin-ccw" style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="36" height="36"><circle cx="36" cy="36" r="26" stroke="url(#r2)" stroke-width="1.2" fill="none" stroke-dasharray="3 7" opacity=".7"/></svg>
+<svg style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="36" height="36"><line x1="36" y1="15" x2="14" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/><line x1="36" y1="15" x2="58" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/></svg>
 </div>
+<div class="nav-word"><span class="k">krev</span><span class="ai">AI</span><span class="x">x</span></div>
+</a>
+<div class="nav-right">
+<ul class="nav-links" id="navLinks">
+<li><a href="#services">Services</a></li>
+<li><a href="#process">How It Works</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#case-studies">Results</a></li>
+<li><a href="#contact" class="nav-cta">Book a Consultation</a></li>
+</ul>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><span class="toggle-icons"><span>☽</span><span>☀</span></span></button>
+<button class="mob-btn" id="mobBtn" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</div>
+</nav>
+
+<section class="hero">
+<div class="grid-bg"></div><div class="glow-c"></div><div class="glow-p"></div>
+<div class="hero-content">
+<div class="hero-icon">
+<svg class="spin-cw" style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="80" height="80"><circle cx="36" cy="36" r="32" stroke="url(#r1)" stroke-width="2.5" fill="none" filter="url(#rg)"/><circle cx="36" cy="36" r="32" stroke="url(#r1)" stroke-width="1.5" fill="none" stroke-dasharray="5 10" opacity=".6"/></svg>
+<svg class="spin-ccw" style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="80" height="80"><circle cx="36" cy="36" r="26" stroke="url(#r2)" stroke-width="1.2" fill="none" stroke-dasharray="3 7" opacity=".7"/></svg>
+<svg style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="80" height="80"><line x1="36" y1="15" x2="14" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/><line x1="36" y1="15" x2="58" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/></svg>
+</div>
+<div class="hero-badge"><span class="badge-dot"></span>Now accepting new clients</div>
+<h1>Stop wasting hours on<br><span class="grad">work AI can do in minutes</span></h1>
+<p class="hero-sub">KrevAIx builds custom AI automation systems that eliminate repetitive operations work — so your team focuses on what actually grows the business.</p>
+<div class="hero-ctas">
+<a href="#contact" class="btn-p">Book a Free Consultation <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a href="#services" class="btn-s">See What We Build</a>
+</div>
+<div class="hero-stats">
+<div><div class="stat-val">20+</div><div class="stat-lbl">Hours Saved Weekly</div></div>
+<div><div class="stat-val">90%</div><div class="stat-lbl">Faster Turnaround</div></div>
+<div><div class="stat-val">24/7</div><div class="stat-lbl">Always Running</div></div>
+</div>
+</div>
+</section>
+
+<section id="services">
+<div class="sc reveal">
+<div class="s-label">// what we build</div>
+<h2 class="s-title">AI automation systems built<br>for how your business actually works</h2>
+<p class="s-sub">Every system is custom-built for your specific operations. We study your workflows and build automation that fits.</p>
+<div class="svc-grid">
+<div class="svc-card"><div class="svc-icon">&#9889;</div><h3>Automated Quote Generation</h3><p>AI generates professional, accurate quotes in minutes using your historical pricing and templates. Same-day turnaround instead of waiting days.</p></div>
+<div class="svc-card"><div class="svc-icon">&#128202;</div><h3>Operations Tracking</h3><p>Real-time visibility across all crews and projects. Nightly reports show what's on schedule, what's behind, and what needs attention.</p></div>
+<div class="svc-card"><div class="svc-icon">&#128196;</div><h3>Document & Permit Automation</h3><p>Safety permits, compliance forms, and regulatory documents auto-filled based on project details. Review and submit, don't write from scratch.</p></div>
+<div class="svc-card"><div class="svc-icon">&#128231;</div><h3>Client Communication</h3><p>Automated follow-ups, progress updates, and status reports that keep clients informed without your team drafting emails manually.</p></div>
+<div class="svc-card"><div class="svc-icon">&#128736;</div><h3>Workflow Integration</h3><p>Connect the tools your team already uses into seamless automated workflows that eliminate manual data entry.</p></div>
+<div class="svc-card"><div class="svc-icon">&#129302;</div><h3>Custom AI Agents</h3><p>Purpose-built AI assistants that handle specific tasks — from processing requests to generating reports and managing data.</p></div>
+</div>
+</div>
+</section>
+
+<section id="process">
+<div class="sc reveal">
+<div class="s-label">// how it works</div>
+<h2 class="s-title">From discovery to deployment<br>in weeks, not months</h2>
+<p class="s-sub">A straightforward process built to deliver results fast.</p>
+<div class="proc-grid">
+<div class="proc-step"><div class="step-num">01</div><h3>Discovery Call</h3><p>We learn your operations, identify the biggest time-wasters, and map what automation can solve.</p></div>
+<div class="proc-step"><div class="step-num">02</div><h3>Strategy & Scope</h3><p>Clear proposal with exactly what we'll build, what it costs, and the measurable impact it delivers.</p></div>
+<div class="proc-step"><div class="step-num">03</div><h3>Build & Test</h3><p>Custom automation built with real data, tested thoroughly, and refined until it fits your team perfectly.</p></div>
+<div class="proc-step"><div class="step-num">04</div><h3>Deploy & Support</h3><p>Your system goes live. We monitor, improve, and ensure everything keeps running smoothly.</p></div>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="sc reveal">
+<div class="s-label">// about krevaix</div>
+<h2 class="s-title">Built by someone who understands<br>operations from the inside</h2>
+<div class="about-grid">
+<div class="about-text">
+<p>KrevAIx was founded on a simple observation: operations-driven businesses waste thousands of hours every year on tasks AI can handle in minutes. Quotes that take days. Reports that eat up evenings. Permits filled out by hand for the hundredth time.</p>
+<p>We don't build generic automation from templates. We come from the field services world — we understand 12-hour days, crews spread across the country, and the pressure to get things right the first time.</p>
+<p>Every system we build is designed for how your business actually operates, not how a software company thinks it should.</p>
+</div>
+<div class="highlights">
+<div class="highlight"><div class="h-icon">&#127919;</div><div><h4>Operations-First Approach</h4><p>We study your actual workflows before building anything. No cookie-cutter solutions.</p></div></div>
+<div class="highlight"><div class="h-icon">&#128295;</div><div><h4>Custom-Built Systems</h4><p>Every automation is tailored to your specific processes, tools, and team.</p></div></div>
+<div class="highlight"><div class="h-icon">&#128640;</div><div><h4>Ongoing Partnership</h4><p>We don't build and disappear. Your systems get maintained and evolved over time.</p></div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="case-studies">
+<div class="sc reveal">
+<div class="s-label">// results</div>
+<h2 class="s-title">Real results from real businesses</h2>
+<p class="s-sub">See how AI automation transforms operations for companies like yours.</p>
+<div class="cs-ph">
+<h3>Case studies coming soon</h3>
+<p>We're currently building automation systems for our first clients. Detailed case studies with real metrics will be published here.</p>
+<a href="#contact" class="btn-p">Be Our Next Success Story</a>
+</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="sc reveal">
+<div class="s-label">// get started</div>
+<h2 class="s-title">Ready to automate<br>your operations?</h2>
+<p class="s-sub">Tell us about your business. We'll get back to you within 24 hours.</p>
+<div class="contact-grid">
+<div class="contact-info">
+<p>Every engagement starts with a free 30-minute consultation. We'll identify automation opportunities and give you an honest assessment of what's possible.</p>
+<div class="c-detail"><div class="c-icon">&#128231;</div><div class="c-text"><strong>Email</strong>gio@krevaix.com</div></div>
+<div class="c-detail"><div class="c-icon">&#128197;</div><div class="c-text"><strong>Book Directly</strong>Free 30-minute consultation</div></div>
+<div class="c-detail"><div class="c-icon">&#9201;</div><div class="c-text"><strong>Response Time</strong>Within 24 hours, usually same day</div></div>
+</div>
+<div>
+<form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+<input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY_HERE">
+<input type="hidden" name="subject" value="New KrevAIx Inquiry">
+<input type="hidden" name="from_name" value="KrevAIx Website">
+<div class="form-row">
+<div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required placeholder="John Smith"></div>
+<div class="form-group"><label for="company">Company</label><input type="text" id="company" name="company" required placeholder="Acme Corp"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required placeholder="john@company.com"></div>
+<div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="(555) 123-4567"></div>
+</div>
+<div class="form-group"><label for="interest">What are you interested in?</label>
+<select id="interest" name="interest" required><option value="" disabled selected>Select a service</option><option value="quote-automation">Automated Quote Generation</option><option value="operations-tracking">Operations Tracking & Reporting</option><option value="document-automation">Document & Permit Automation</option><option value="workflow-integration">Workflow Integration</option><option value="custom-ai-agent">Custom AI Agent</option><option value="not-sure">Not sure yet — need guidance</option></select></div>
+<div class="form-group"><label for="message">Tell us about your challenge</label><textarea id="message" name="message" required placeholder="What repetitive tasks are eating up your team's time?"></textarea></div>
+<div class="form-submit"><button type="submit" class="btn-p">Send Message <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</form>
+<div class="form-success" id="formSuccess"><h3>Message sent!</h3><p>Thanks for reaching out. We'll get back to you within 24 hours.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="footer-inner">
+<div class="foot-logo">
+<div style="width:24px;height:24px;position:relative;flex-shrink:0">
+<svg class="spin-cw" style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="24" height="24"><circle cx="36" cy="36" r="32" stroke="url(#r1)" stroke-width="2.5" fill="none"/></svg>
+<svg style="position:absolute;top:0;left:0" viewBox="0 0 72 72" fill="none" width="24" height="24"><line x1="36" y1="15" x2="14" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/><line x1="36" y1="15" x2="58" y2="57" stroke="url(#cg)" stroke-width="4.5" stroke-linecap="round"/></svg>
+</div>
+<div class="foot-word"><span class="k">krev</span><span class="ai">AI</span><span class="x">x</span></div>
+</div>
+<div class="foot-text">&copy; 2026 KrevAIx. All rights reserved.</div>
+</div>
+</footer>
+
+<script>
+const themeToggle=document.getElementById('themeToggle'),html=document.documentElement;
+const saved=localStorage.getItem('krevaix-theme');if(saved)html.setAttribute('data-theme',saved);
+themeToggle.addEventListener('click',()=>{const c=html.getAttribute('data-theme'),n=c==='dark'?'light':'dark';html.setAttribute('data-theme',n);localStorage.setItem('krevaix-theme',n)});
+const navbar=document.getElementById('navbar');window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>50)});
+const mobBtn=document.getElementById('mobBtn'),navLinks=document.getElementById('navLinks');
+mobBtn.addEventListener('click',()=>{mobBtn.classList.toggle('active');navLinks.classList.toggle('active')});
+navLinks.querySelectorAll('a').forEach(l=>{l.addEventListener('click',()=>{mobBtn.classList.remove('active');navLinks.classList.remove('active')})});
+const observer=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const contactForm=document.getElementById('contactForm'),formSuccess=document.getElementById('formSuccess');
+contactForm.addEventListener('submit',async e=>{e.preventDefault();try{const r=await fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(contactForm)});if(r.ok){contactForm.style.display='none';formSuccess.classList.add('show')}}catch(err){contactForm.style.display='none';formSuccess.classList.add('show')}});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+</script>
 </body>
 </html>
